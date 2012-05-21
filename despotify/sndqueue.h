@@ -56,6 +56,7 @@ void snd_set_end_callback (struct despotify_session* ds,
 void snd_set_timetell_callback (struct despotify_session* ds,
                                 time_tell_callback callback);
 
+void snd_fill_fifo (struct despotify_session *ds);
 int snd_stop (struct despotify_session* ds);
 int snd_next (struct despotify_session *ds);
 void snd_start (struct despotify_session* ds);

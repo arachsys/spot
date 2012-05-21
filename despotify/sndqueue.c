@@ -109,7 +109,7 @@ void snd_destroy (struct despotify_session* ds)
 	}
 }
 
-static void snd_fill_fifo(struct despotify_session* ds)
+void snd_fill_fifo(struct despotify_session* ds)
 {
     if (ds->dlabort) {
         while (ds->dlstate == DL_FILLING_BUSY) {
