@@ -68,6 +68,9 @@ void snd_mark_dlding (struct despotify_session* ds);
 void snd_mark_idle (struct despotify_session* ds);
 void snd_mark_end (struct despotify_session* ds);
 
+int snd_consume_data(struct despotify_session* ds, int req_bytes, void* private,
+                     int (*consumer)(void* source, int bytes, void* private,
+                                     int offset));
 size_t snd_ov_read_callback(void *ptr, size_t size, size_t nmemb, void* ds);
 long snd_pcm_read(struct despotify_session* ds,
                   char *buffer, int length, int bigendianp,
