@@ -77,6 +77,8 @@ struct album_browse
 {
     char name[STRING_LENGTH];
     char id[33];
+    char artist[STRING_LENGTH];
+    char artist_id[33];
     int num_tracks;
     struct track* tracks;
     int year;

@@ -95,7 +95,7 @@ int get_uri(int argc, char **argv) {
           error(0, 0, "Album '%s' not found", argv[i]);
           continue;
         }
-        fprintf(stderr, "Album: %s\n", a->name);
+        fprintf(stderr, "Album: %s - %s\n", a->artist, a->name);
         for (t = a->tracks; t; t = n) {
           n = t->next;
           fetch(t);

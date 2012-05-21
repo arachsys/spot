@@ -372,6 +372,8 @@ static void parse_browse_album(ezxml_t top, struct album_browse* a, bool high_bi
 {
     xmlstrncpy(a->name, sizeof a->name, top, "name", -1);
     xmlstrncpy(a->id, sizeof a->id, top, "id", -1);
+    xmlstrncpy(a->artist, sizeof a->artist, top, "artist", -1);
+    xmlstrncpy(a->artist_id, sizeof a->artist_id, top, "artist-id", -1);
     xmlstrncpy(a->cover_id, sizeof a->cover_id, top, "cover", -1);
     xmlatoi(&a->year, top, "year", -1);
     xmlatof(&a->popularity, top, "popularity", -1);
