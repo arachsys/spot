@@ -115,6 +115,12 @@ bool despotify_authenticate(struct despotify_session* ds,
     }
     DSFYDEBUG("session_connect() completed\n");
 
+    struct timeval timeout;
+    timeout.tv_sec = 10;
+    timeout.tv_usec = 0;
+    setsockopt(ds->session->ap_sock, SOL_SOCKET, SO_RCVTIMEO,
+            &timeout, sizeof(timeout));
+
     switch (do_key_exchange(ds->session))
     {
         case 0: /* all ok */
@@ -159,6 +165,11 @@ bool despotify_authenticate(struct despotify_session* ds,
         return false;
     }
     DSFYDEBUG("%s", "do_auth() completed\n");
+
+    timeout.tv_sec = 0;
+    timeout.tv_usec = 0;
+    setsockopt(ds->session->ap_sock, SOL_SOCKET, SO_RCVTIMEO,
+            &timeout, sizeof(timeout));
 
     pthread_create(&ds->thread, NULL, &despotify_thread, ds);
 
