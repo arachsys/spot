@@ -1637,7 +1637,9 @@ char* despotify_track_to_uri(struct track* track, char* dest)
     return dest;
 }
 
+#ifdef DECODERS
 int despotify_get_pcm(struct despotify_session* ds, struct pcm_data* pcm)
 {
     return snd_get_pcm(ds, pcm);
 }
+#endif

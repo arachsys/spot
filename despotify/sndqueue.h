@@ -7,7 +7,10 @@
 #define DESPOTIFY_SNDQUEUE_H
 
 #include <pthread.h>
+
+#ifdef DECODERS
 #include <vorbis/vorbisfile.h>
+#endif
 
 #include "despotify.h"
 
@@ -71,9 +74,13 @@ void snd_mark_end (struct despotify_session* ds);
 int snd_consume_data(struct despotify_session* ds, int req_bytes, void* private,
                      int (*consumer)(void* source, int bytes, void* private,
                                      int offset));
+
+#ifdef DECODERS
 size_t snd_ov_read_callback(void *ptr, size_t size, size_t nmemb, void* ds);
 long snd_pcm_read(struct despotify_session* ds,
                   char *buffer, int length, int bigendianp,
                   int word, int sgned, int *bitstream);
 int snd_get_pcm(struct despotify_session*, struct pcm_data*);
+#endif
+
 #endif

@@ -10,8 +10,10 @@
 #include <pthread.h>
 #include <assert.h>
 
+#ifdef DECODERS
 #ifdef MP3_SUPPORT
 #include <mpg123.h>
+#endif
 #endif
 
 #include "sndqueue.h"
@@ -32,6 +34,7 @@ static void shortsleep(void)
 }
 
 void snd_reset_codec(struct despotify_session* ds) {
+#ifdef DECODERS
 	DSFYDEBUG("Resetting audio codec\n");
 	if ( ds->vf ) {
 		ov_clear(ds->vf);
@@ -43,6 +46,7 @@ void snd_reset_codec(struct despotify_session* ds) {
 #endif
 		ds->mf = NULL;
 	}
+#endif
 }
 
 
@@ -451,6 +455,7 @@ int snd_consume_data(struct despotify_session* ds, int req_bytes, void* private,
 }
 
 
+#ifdef DECODERS
 static int vorbis_consume(void* source, int bytes, void* private, int offset)
 {
     memcpy(private+offset,source,bytes);
@@ -768,3 +773,4 @@ int snd_get_pcm(struct despotify_session* ds, struct pcm_data* pcm)
     	return -3;
     }
 }
+#endif
