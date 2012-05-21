@@ -376,10 +376,23 @@ static void parse_browse_album(ezxml_t top, struct album_browse* a, bool high_bi
     xmlatoi(&a->year, top, "year", -1);
     xmlatof(&a->popularity, top, "popularity", -1);
 
-    /* TODO: support multiple discs per album  */
     a->tracks = calloc(1, sizeof(struct track));
     ezxml_t disc = ezxml_get(top, "discs",0,"disc", -1);
     a->num_tracks = parse_tracks(disc, a->tracks, false, high_bitrate);
+
+    /* Append extra discs to album  */
+    struct track *last = a->tracks;
+    while (last->next)
+      last = last->next;
+    while ((disc = disc->next)) {
+      int offset = last->tracknumber;
+      last->next = calloc(1, sizeof(struct track));
+      a->num_tracks += parse_tracks(disc, last->next, false, high_bitrate);
+      do {
+        last = last->next;
+        last->tracknumber += offset;
+      } while (last->next);
+    }
 
     /* Copy missing metadata from album to tracks */
     int count = 0;
