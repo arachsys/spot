@@ -17,7 +17,8 @@
 #if defined(__linux__) 
 	#include <endian.h>
 #endif
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) | defined(__NetBSD__) || defined(__OpenBSD__) \
+      || defined(__DragonFly__) || defined(__APPLE__)
 	#include <machine/endian.h>
 	#define __BYTE_ORDER _BYTE_ORDER
 	#define __LITTLE_ENDIAN _LITTLE_ENDIAN
