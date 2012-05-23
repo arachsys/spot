@@ -9,12 +9,13 @@ LDLIBS = -lcrypto -ldl -lm -lresolv -lz
 
 despotify/%.o: CFLAGS = -g -std=gnu99 -Os -fdata-sections -ffunction-sections
 
-spotcat: spotcat.o $(patsubst %.c, %.o, $(wildcard despotify/*.c))
+spot: spot.o cat.o fetch.o find.o get.o list.o \
+  $(patsubst %.c, %.o, $(wildcard despotify/*.c))
 
 clean:
-	rm -f -- spotcat tags *.o despotify/*.o
+	rm -f -- spot tags *.o despotify/*.o
 
-install: spotcat
+install: spot
 	mkdir -p ${DESTDIR}${BINDIR}
 	install -m 0755 -s $< ${DESTDIR}${BINDIR}
 
