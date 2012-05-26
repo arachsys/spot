@@ -80,6 +80,7 @@ struct album_browse
     char artist[STRING_LENGTH];
     char artist_id[33];
     int num_tracks;
+    int playable_tracks;
     struct track* tracks;
     int year;
     char cover_id[41];

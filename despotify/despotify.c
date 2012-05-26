@@ -1307,7 +1307,7 @@ struct album_browse* despotify_get_album(struct despotify_session* ds,
             xml_parse_browse_album(ds->album_browse, data, len, ds->high_bitrate);
             free(data);
 
-            return ds->album_browse;
+            goto out;
         }
     }
 
@@ -1342,6 +1342,15 @@ struct album_browse* despotify_get_album(struct despotify_session* ds,
     }
     buf_free(ds->response);
 
+out:
+    ds->album_browse->playable_tracks = 0;
+    for (struct track *t = ds->album_browse->tracks; t; t = t->next) {
+        t->geo_restricted = despotify_is_track_restricted(t, ds->user_info->country);
+        if (t->geo_restricted)
+            t->playable = false;
+        if (t->playable)
+            ds->album_browse->playable_tracks++;
+    }
     return ds->album_browse;
 }
 
