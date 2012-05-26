@@ -20,13 +20,25 @@ int list_uri(int argc, char **argv) {
           continue;
         }
 
-        printf("%36s\t%s - %s [%d, %d tracks]\n", argv[i], album->artist,
-            album->name, album->year, album->num_tracks);
+        if (album->playable_tracks == album->num_tracks)
+          printf("%36s\t%s - %s (%d, %d tracks)\n", argv[i], album->artist,
+              album->name, album->year, album->num_tracks);
+        else
+          printf("%36s\t%s - %s (%d, %d/%d tracks playable)\n", argv[i],
+              album->artist, album->name, album->year, album->playable_tracks,
+              album->num_tracks);
+
         for (track = album->tracks; track; track = track->next) {
           despotify_track_to_uri(track, track_uri);
-          printf("%36s\t%02d: %s\n", track_uri, track->tracknumber,
-              track->title);
+          if (track->playable)
+            printf("%36s\t%02d: %s (%d:%02d at %d kbit/s)\n", track_uri,
+                track->tracknumber, track->title, track->length/60000,
+                (track->length % 60000)/1000, track->file_bitrate/1000);
+          else
+            printf("%36s\t%02d: %s (not playable)\n", track_uri,
+                track->tracknumber, track->title);
         }
+
         if (i + 1 < argc)
           putchar('\n');
         break;
@@ -39,9 +51,23 @@ int list_uri(int argc, char **argv) {
         }
 
         despotify_id2uri(track->album_id, album_uri + strlen(album_uri));
-        printf("%36s\t%s - %s [%d, %d tracks]\n", album_uri, album->artist,
-            album->name, album->year, album->num_tracks);
-        printf("%36s\t%02d: %s\n", argv[i], track->tracknumber, track->title);
+
+        if (album->playable_tracks == album->num_tracks)
+          printf("%36s\t%s - %s (%d, %d tracks)\n", album_uri, album->artist,
+              album->name, album->year, album->num_tracks);
+        else
+          printf("%36s\t%s - %s (%d, %d/%d tracks playable)\n", album_uri,
+              album->artist, album->name, album->year, album->playable_tracks,
+              album->num_tracks);
+
+        if (track->playable)
+          printf("%36s\t%02d: %s (%d:%02d at %d kbit/s)\n", argv[i],
+              track->tracknumber, track->title, track->length/60000,
+              (track->length % 60000)/1000, track->file_bitrate/1000);
+        else
+          printf("%36s\t%02d: %s (not playable)\n", argv[i],
+              track->tracknumber, track->title);
+
         if (i + 1 < argc)
           putchar('\n');
         break;

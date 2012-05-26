@@ -19,9 +19,16 @@ static int find_albums(char *match) {
         char uri[37] = "spotify:album:";
         struct album_browse *ab = despotify_get_album(ds, album->id);
         despotify_id2uri(album->id, uri + strlen(uri));
-        printf("%36s\t%s - %s [%d, %d tracks]\n", uri, album->artist,
-            album->name, ab->year, ab->num_tracks);
+
+        if (ab->playable_tracks == ab->num_tracks)
+          printf("%36s\t%s - %s (%d, %d tracks)\n", uri, album->artist,
+              album->name, ab->year, ab->num_tracks);
+        else
+          printf("%36s\t%s - %s (%d, %d/%d tracks playable)\n", uri,
+              album->artist, album->name, ab->year, ab->playable_tracks,
+              ab->num_tracks);
       }
+
       if (count == search->total_albums)
         fprintf(stderr, "%d %s found\n", search->total_albums,
             search->total_albums == 1 ? "album": "albums");
@@ -52,11 +59,24 @@ static int find_tracks(char *match) {
         struct album_browse *album = despotify_get_album(ds, track->album_id);
         despotify_id2uri(track->album_id, album_uri + strlen(album_uri));
         despotify_id2uri(track->track_id, track_uri + strlen(track_uri));
-        printf("%36s\t%s - %s [%d, %d tracks]\n", album_uri, album->artist,
-            album->name, album->year, album->num_tracks);
-        printf("%36s\t%02d: %s\n\n", track_uri, track->tracknumber,
-            track->title);
+
+        if (album->playable_tracks == album->num_tracks)
+          printf("%36s\t%s - %s (%d, %d tracks)\n", album_uri, album->artist,
+              album->name, album->year, album->num_tracks);
+        else
+          printf("%36s\t%s - %s (%d, %d/%d tracks playable)\n", album_uri,
+              album->artist, album->name, album->year, album->playable_tracks,
+              album->num_tracks);
+
+        if (track->playable)
+          printf("%36s\t%02d: %s (%d:%02d at %d kbit/s)\n\n", track_uri,
+              track->tracknumber, track->title, track->length/60000,
+              (track->length % 60000)/1000, track->file_bitrate/1000);
+        else
+          printf("%36s\t%02d: %s (not playable)\n\n", track_uri,
+              track->tracknumber, track->title);
       }
+
       if (count == search->total_tracks)
         fprintf(stderr, "%d %s found\n", search->total_tracks,
             search->total_tracks == 1 ? "track": "tracks");
