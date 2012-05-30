@@ -1,0 +1,23 @@
+This is spot, a clean and simple command line interface for Spotify which can
+perform searches, list track and album info, and stream or download compressed
+Ogg Vorbis audio data from the service.
+
+The spot utility returns a brief usage summary when run without arguments.
+Before running it, the environment variables SPOTIFY_USERNAME and
+SPOTIFY_PASSWORD should be set to valid Spotify login credentials.
+
+A useful bash shell-function wrapper with completion support on recently found
+spotify:album: and spotify:track: URIs is included in spot.bash.
+
+There are no build dependencies apart from libc and OpenSSL libcrypto, but
+after successfully downloading tracks, spot will attempt to run vorbiscomment
+to tag the resulting files with album and track metadata, and then vorbisgain
+to add ReplayGain info. It will warn without aborting if either of these
+utilities is not available, leaving the output files untagged.
+
+This software is based around a modified version of the #hack.se despotify
+library. All imported files are contained in the despotify/ directory and are
+included under the terms of the BSD 2-Clause License in despotify/COPYING. The
+rest of the code is freely distributed under the terms of the MIT License in
+COPYING. You are responsible for ensuring that your use of this software is in
+compliance with the terms and conditions of your Spotify subscription.
