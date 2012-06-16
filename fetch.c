@@ -25,7 +25,7 @@ start:
   while (ds->track != NULL || length > 0) {
     for (retry = 0; !ds || !ds->fifo || !ds->fifo->start; retry++)
       if (out != stdout && retry > 100) {
-        fprintf(msg, "%38s\tstalled at %ld bytes\n", uri, total);
+        fprintf(msg, "%38s\tstalled at %zu bytes\n", uri, total);
         while (!login(NULL, NULL)) {
           fprintf(msg, "%38s re-authentication failed: retrying in 5 seconds\n", uri);
           sleep(5);
@@ -41,10 +41,10 @@ start:
     if (length > 0) {
       total += length;
       if (isatty(fileno(msg)))
-        fprintf(msg, "%38s\treceived %ld bytes\r", uri, total);
+        fprintf(msg, "%38s\treceived %zu bytes\r", uri, total);
     }
   }
 
-  fprintf(msg, "%38s\tcompleted %ld bytes\n", uri, total);
+  fprintf(msg, "%38s\tcompleted %zu bytes\n", uri, total);
   return;
 }
